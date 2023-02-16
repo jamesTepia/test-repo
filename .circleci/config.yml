@@ -7,9 +7,14 @@ jobs:
     steps:
       - checkout
       - run:
+          name: View Fiiles in repo
+          command: |
+            ls -al
+            echo '^^^The files in your repo^^^'
+      - run:
           name: Load Docker image
           command: |
-            docker load -i ./
+            docker load -i .
       - run:
           name: Run command inside container
           command: |
