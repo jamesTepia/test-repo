@@ -7,6 +7,18 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Display the current active path
+          command: |
+            pwd
+      - run:
+          name: List the contents of the repo
+          command: |
+            ls -al
+      - run:
+          name: Start Docker
+          command: |
+            sudo service docker start
+      - run:
           name: Build Docker image
           command: |
             docker build -t test .
