@@ -20,18 +20,27 @@ jobs:
           name: Execute main.py
           command: |
             python test.py
+  deploy:
+    docker: 
+      - image: alpine:3.15
+    steps:
+      - run:
+          name: Done
+          command: |
+            echo "Done Deployment"
+
 workflows:
   test_env:
     jobs:
       - build
-      - test
-        requires:
-          - Fetch-Code
-      - Hold-for-Approval
-        type: approval
+      - test:
+          requires:
+            - build
+      - Hold-for-Approval:
+          type: approval
           requires:
             - build
             - test
-      - deploy
-        requires:
+      - deploy:
+          requires:
             - Hold-for-Approval
