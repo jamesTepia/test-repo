@@ -52,7 +52,7 @@ workflows:
       - build:
           requires:
             - run
-            -test
+            - test
       - Hold-for-Approval:
           type: approval
           requires:
