@@ -25,6 +25,4 @@ workflow:
   test_env:
     jobs:
       - build
-      - test:
-          requires:
-            - build
+      - test
