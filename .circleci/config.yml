@@ -20,8 +20,7 @@ jobs:
           name: Execute main.py
           command: |
             python test.py
-
-workflow:
+workflows:
   test_env:
     jobs:
       - build
