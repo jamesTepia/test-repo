@@ -12,13 +12,8 @@ jobs:
           name: Build Docker image
           command: |
             docker build -t test .
-  run:
-    docker:
-      - image: docker:20.10.11-git
-    working_directory: ~/app
-    steps:      
       - run:
-          name: Run Docker
+          name: Run Docker image
           command: |
             docker run test
   test:
@@ -42,19 +37,14 @@ jobs:
 workflows:
   test_env:
     jobs:
-      - build
-      - run:
-          requires:
-            - build
+      - build      
       - test:
           requires:
-            - build
-            - run
+            - build            
       - Hold-for-Approval:
           type: approval
           requires:
             - build
-            - run
             - test
       - deploy:
           requires:
