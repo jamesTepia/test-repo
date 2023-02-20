@@ -21,10 +21,11 @@ jobs:
       - image: python:3
     working_directory: ~/app
     steps:      
+      - checkout
       - run:
           name: Execute test.py
           command: |
-            python ./test.py
+            python test.py
   deploy:
     docker: 
       - image: alpine:3.15
