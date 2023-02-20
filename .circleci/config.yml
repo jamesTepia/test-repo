@@ -25,3 +25,13 @@ workflows:
     jobs:
       - build
       - test
+        requires:
+          - Fetch-Code
+      - Hold-for-Approval
+        type: approval
+          requires:
+            - build
+            - test
+      - deploy
+        requires:
+            - Hold-for-Approval
