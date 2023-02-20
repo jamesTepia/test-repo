@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  build:
+  run:
     docker:
       - image: python:3
     working_directory: ~/james
@@ -20,6 +20,19 @@ jobs:
           name: Execute main.py
           command: |
             python test.py
+  build:
+    docker: 
+      - image: docker:latest
+    steps:
+      - checkout
+      - run:
+          name: Build the docker release
+          command: |
+            docker build -t test .
+      - run:
+          name: Run the docker image
+          command: |
+            docker run -t test
   deploy:
     docker: 
       - image: alpine:3.15
@@ -32,15 +45,20 @@ jobs:
 workflows:
   test_env:
     jobs:
-      - build
+      - run
       - test:
           requires:
-            - build
+            - run
+      - build:
+          requires:
+            - run
+            -test
       - Hold-for-Approval:
           type: approval
           requires:
-            - build
+            - run
             - test
+            - build      
       - deploy:
           requires:
             - Hold-for-Approval
