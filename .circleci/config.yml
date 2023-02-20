@@ -22,17 +22,15 @@ jobs:
             python test.py
   build:
     docker: 
-      - image: docker:latest
+      - image: docker:20.10.22
     steps:
       - checkout
       - run:
-          name: Build the docker release
+          name: Run the docker release
           command: |
-            docker build -t test .
-      - run:
-          name: Run the docker image
-          command: |
-            docker run -t test
+            docker run -v /var/run/docker.sock:/var/run/docker.sock docker:20.10.22
+            apt-get update
+            apt-get install docker.io            
   deploy:
     docker: 
       - image: alpine:3.15
