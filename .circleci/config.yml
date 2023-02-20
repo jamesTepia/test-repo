@@ -1,36 +1,35 @@
 version: 2.1
 jobs:
-  run:
+  build:
     docker:
-      - image: python:3
-    working_directory: ~/james
+      - image: docker:20.10.11-git
+    working_directory: /app
     steps:
       - checkout
+      - setup_remote_docker:
+          version: 20.10.11
       - run:
-          name: Execute main.py
+          name: Build Docker image
           command: |
-            python main.py
+            docker build -t test .
+  run:
+    docker:
+      - image: docker:20.10.11-git
+    working_directory: ~/app
+    steps:      
+      - run:
+          name: Run Docker
+          command: |
+            docker run test
   test:
     docker:
       - image: python:3
-    working_directory: ~/james
-    steps:
-      - checkout
+    working_directory: ~/app
+    steps:      
       - run:
           name: Execute main.py
           command: |
             python test.py
-  build:
-    docker: 
-      - image: docker:20.10.22
-    steps:
-      - checkout
-      - run:
-          name: Run the docker release
-          command: |
-            docker run -v /var/run/docker.sock:/var/run/docker.sock docker:20.10.22
-            apt-get update
-            apt-get install docker.io            
   deploy:
     docker: 
       - image: alpine:3.15
@@ -43,20 +42,20 @@ jobs:
 workflows:
   test_env:
     jobs:
-      - run
+      - build
+      - run:
+          requires:
+            - build
       - test:
           requires:
+            - build
             - run
-      - build:
-          requires:
-            - run
-            - test
       - Hold-for-Approval:
           type: approval
           requires:
+            - build
             - run
             - test
-            - build      
       - deploy:
           requires:
             - Hold-for-Approval
