@@ -22,9 +22,9 @@ jobs:
     working_directory: ~/app
     steps:      
       - run:
-          name: Execute main.py
+          name: Execute test.py
           command: |
-            python test.py
+            python ./test.py
   deploy:
     docker: 
       - image: alpine:3.15
