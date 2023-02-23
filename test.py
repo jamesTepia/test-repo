@@ -1,1 +1,1 @@
-print("Successful testing")
+print("Successful testing of application")
