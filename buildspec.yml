@@ -4,7 +4,7 @@ phases:
   install:
     on-failure: ABORT
     runtime-versions:
-      docker: ubuntu@latest
+      nodejs: 18
     commands:
       - echo "Install Dependencies"
       - apt-get update 
