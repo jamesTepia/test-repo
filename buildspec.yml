@@ -4,9 +4,9 @@ phases:
   install:
     on-failure: ABORT
     runtime-versions:
-      nodejs: 18      
+      docker: ubuntu@latest
     commands:
       - echo "Install Dependencies"
       - apt-get update 
       - apt-get install -y wget
-      - apt-get install -y fontconfig freetype freetype-devel fontconfig-devel libstdc++    
+      - apt-get install -y fontconfig freetype freetype-devel fontconfig-devel libstdc++
