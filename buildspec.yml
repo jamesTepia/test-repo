@@ -11,6 +11,8 @@ env:
     ENV_NAME: "James-node-test-env"
   secrets-manager:
     GIT_TOKEN: "arn:aws:secretsmanager:us-west-1:882607026930:secret:GIT_TOKEN_JAMES-XAWNwm:GIT_TOKEN"
+    AWS_ACCESS_KEY_ID: "arn:aws:secretsmanager:us-west-1:882607026930:secret:GIT_TOKEN_JAMES-XAWNwm:AWS_ACCESS_KEY_ID"
+    AWS_SECRET_ACCESS_KEY: "arn:aws:secretsmanager:us-west-1:882607026930:secret:GIT_TOKEN_JAMES-XAWNwm:AWS_SECRET_ACCESS_KEY"
 
 phases:
   install:
