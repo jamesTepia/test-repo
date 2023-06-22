@@ -30,3 +30,16 @@ phases:
       - yarn install --immutable --immutable-cache --check-cache
       - echo "Generate deployment package"
       - zip -r deploy.zip * -x ./node_modules
+
+artifacts:
+  files:
+    - deploy.zip
+  name: wss-backend
+deploy:
+  provider: ElasticBeanstalk
+  region: us-east-1
+  app: james-node-test
+  env: James-node-test-env
+  zip_file: deploy.zip
+  on:
+    branch: main
