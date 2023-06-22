@@ -5,6 +5,10 @@ env:
     GIT_USER: "jamesTepia"
     GIT_REPO: "test-repo"
     LOCAL_DIR: "/wss"
+    APP_NAME: "james-node-test"
+    AWS_DEFAULT_REGION: "us-east-1"
+    PLATFORM_VERSION: "node.js"
+    ENV_NAME: "James-node-test-env"
   secrets-manager:
     GIT_TOKEN: "arn:aws:secretsmanager:us-west-1:882607026930:secret:GIT_TOKEN_JAMES-XAWNwm:GIT_TOKEN"
 
@@ -31,15 +35,17 @@ phases:
       - echo "Generate deployment package"
       - zip -r deploy.zip * -x ./node_modules
 
+  post_build:
+    commands:
+      - echo "Setting up Elastic BeanStalk"
+      - git clone https://github.com/aws/aws-elastic-beanstalk-cli-setup.git
+      - python ./aws-elastic-beanstalk-cli-setup/scripts/ebcli_installer.py
+      - echo "Deploying the code to Elastic BeanStalk"
+      - eb init $APP_NAME -r $AWS_DEFAULT_REGION -p $PLATFORM_VERSION
+      - eb deploy $ENV_NAME
+
+
 artifacts:
   files:
     - deploy.zip
   name: wss-backend
-deploy:
-  provider: ElasticBeanstalk
-  region: us-east-1
-  app: james-node-test
-  env: James-node-test-env
-  zip_file: deploy.zip
-  on:
-    branch: main
