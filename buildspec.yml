@@ -3,53 +3,20 @@ version: 0.2
 env:
   variables:    
     GIT_USER: "jamesTepia"
-    GIT_REPO: "test-repo"
-    LOCAL_DIR: "/wss"
-    APP_NAME: "james-node-test"
+    GIT_REPO: "test-repo"    
     AWS_DEFAULT_REGION: "us-east-1"
-    PLATFORM_VERSION: "node.js"
-    ENV_NAME: "James-node-test-env"
   secrets-manager:
-    GIT_TOKEN: "arn:aws:secretsmanager:us-west-1:882607026930:secret:GIT_TOKEN_JAMES-XAWNwm:GIT_TOKEN"
-    AWS_ACCESS_KEY_ID: "arn:aws:secretsmanager:us-west-1:882607026930:secret:GIT_TOKEN_JAMES-XAWNwm:AWS_ACCESS_KEY_ID"
-    AWS_SECRET_ACCESS_KEY: "arn:aws:secretsmanager:us-west-1:882607026930:secret:GIT_TOKEN_JAMES-XAWNwm:AWS_SECRET_ACCESS_KEY"
+    GIT_TOKEN: "arn:aws:secretsmanager:us-east-1:636184159442:secret:james-test-WYYiCZ:GIT_TOKEN"
 
 phases:
   install:
-    on-failure: ABORT
-    runtime-versions:
-      nodejs: 18
+    on-failure: ABORT    
+
   pre_build:
     commands:
-      - echo "Checking out the code..."
-      - git clone https://$GIT_TOKEN@github.com/$GIT_USER/$GIT_REPO.git $LOCAL_DIR
-
-  build:
-    commands:
-      - echo "Installing Yarn"
-      - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-      - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-      - apt-get update
-      - apt-get -y install yarn
-      - echo "Installing dependencies with Yarn..."
-      - cd $LOCAL_DIR
-      - yarn install --immutable --immutable-cache --check-cache
-      - echo "Generate deployment package"
-      - zip -r deploy.zip * -x ./node_modules
-
-  post_build:
-    commands:
-      - echo "Setting up Elastic BeanStalk"
-      - git clone https://github.com/aws/aws-elastic-beanstalk-cli-setup.git
-      - python ./aws-elastic-beanstalk-cli-setup/scripts/ebcli_installer.py
-      - echo 'export PATH="/root/.ebcli-virtual-env/executables:$PATH"' >> ~/.bash_profile
-      - . ~/.bash_profile
-      - echo "Deploying the code to Elastic BeanStalk"
-      - eb init $APP_NAME -r $AWS_DEFAULT_REGION -p $PLATFORM_VERSION
-      - eb deploy $ENV_NAME
-
-
-artifacts:
-  files:
-    - deploy.zip
-  name: wss-backend
+      - echo "Running Trufflehog scanning for secrets ..."      
+      - docker run --rm -it -v "$PWD:/pwd" trufflesecurity/trufflehog:latest github --repo https://github.com/Uon-Social/Backend --token $GIT_TOKEN --no-verification --json > $pwd/trufflehog.json
+  
+  artifacts:
+    files:
+      - trufflehog.json
