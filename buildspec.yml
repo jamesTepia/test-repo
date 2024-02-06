@@ -22,10 +22,11 @@ phases:
       - docker run trufflesecurity/trufflehog:latest github --repo https://github.com/Uon-Social/Backend --token $GIT_TOKEN --no-verification --json > trufflehog.log
       - echo "Trufflehog scanning complete"
       - echo "Identified Issues ..."
-      - while IFS= read -r line;
-        do;
-          echo "$line" | jq -r '.SourceMetadata.Data.Github.link';
-        done < "trufflehog.log";
+      - |
+        while IFS= read -r line
+        do
+          echo "$line" | jq -r '.SourceMetadata.Data.Github.link'
+        done < "trufflehog.log"
           
 artifacts:
   files:
