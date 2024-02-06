@@ -7,6 +7,9 @@ env:
     AWS_DEFAULT_REGION: "us-east-1"
   secrets-manager:
     GIT_TOKEN: "arn:aws:secretsmanager:us-east-1:636184159442:secret:james-test-WYYiCZ:GIT_TOKEN"
+    DOCKER_USERNAME: "arn:aws:secretsmanager:us-east-1:636184159442:secret:james-test-WYYiCZ:DOCKER_USERNAME"
+    DOCKER_PASSWORD: "arn:aws:secretsmanager:us-east-1:636184159442:secret:james-test-WYYiCZ:DOCKER_PASSWORD"
+
 
 phases:
   install:
@@ -15,6 +18,7 @@ phases:
   pre_build:
     commands:
       - echo "Running Trufflehog scanning for secrets ..."      
+      - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       - docker run trufflesecurity/trufflehog:latest github --repo https://github.com/Uon-Social/Backend --token $GIT_TOKEN --no-verification --json > trufflehog.log
       - echo "Trufflehog scanning complete"
       - echo "Identified Issues ..."
