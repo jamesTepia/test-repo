@@ -15,8 +15,8 @@ phases:
   pre_build:
     commands:
       - echo "Running Trufflehog scanning for secrets ..."      
-      - docker run --rm -it -v "$PWD:/pwd" trufflesecurity/trufflehog:latest github --repo https://github.com/Uon-Social/Backend --token $GIT_TOKEN --no-verification --json > $pwd/trufflehog.json
+      - docker run --rm -it -v "$PWD:/pwd" trufflesecurity/trufflehog:latest github --repo https://github.com/Uon-Social/Backend --token $GIT_TOKEN --no-verification --json > $PWD/trufflehog.json
   
-  artifacts:
-    files:
-      - trufflehog.json
+artifacts:
+  files:
+    - trufflehog.json
