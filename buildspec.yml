@@ -22,7 +22,7 @@ phases:
     commands:
       - echo "Running Trufflehog scanning for secrets ..."
       - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-      - git clone https://$GIT_TOKEN@github.com/$ORG/$Backend.git
+      - git clone https://$GIT_TOKEN@github.com/$ORG/$REPO_TO_SCAN.git
       - cd $REPO_TO_SCAN
       - docker run -v "$(pwd):/project" trufflesecurity/trufflehog:latest git file:///project --since-commit $COMMIT_ID --json > trufflehog.log
       - echo "Trufflehog scanning complete"
