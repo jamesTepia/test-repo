@@ -7,6 +7,7 @@ env:
     AWS_DEFAULT_REGION: "us-east-1"
     ORG: "Uon-Social"
     REPO_TO_SCAN: "Backend"
+    COMMIT_ID: "241cb25122d2c07f67f0d9aca6ad9c791464b080"
   secrets-manager:
     GIT_TOKEN: "arn:aws:secretsmanager:us-east-1:636184159442:secret:james-test-WYYiCZ:GIT_TOKEN"
     DOCKER_USERNAME: "arn:aws:secretsmanager:us-east-1:636184159442:secret:james-test-WYYiCZ:DOCKER_USERNAME"
@@ -22,9 +23,9 @@ phases:
       - echo "Running Trufflehog scanning for secrets ..."      
       - git clone https://$GIT_TOKEN@github.com/$ORG/$REPO_TO_SCAN.git
       - cd $REPO_TO_SCAN
-      - git checkout $CODEBUILD_RESOLVED_SOURCE_VERSION
+      - git checkout $COMMIT_ID
       - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-      - docker run -v "$(pwd):/project" trufflesecurity/trufflehog:latest file:///project --token $GIT_TOKEN --no-verification --json > trufflehog.log
+      - docker run -v "$(pwd):/project" trufflesecurity/trufflehog:latest file:///project --no-verification --json > trufflehog.log
       - echo "Trufflehog scanning complete"
       - echo "Identified Issues ..."
       - |
