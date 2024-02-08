@@ -18,8 +18,8 @@ phases:
 
   pre_build:
     commands:
-      - echo "Running Trufflehog scanning for secrets ..."
-      - git clone https://github.com/$REPO_TO_SCAN
+      - echo "Running Trufflehog scanning for secrets ..."      
+      - git clone https://$GIT_TOKEN@github.com/$REPO_TO_SCAN.git
       - cd $REPO_TO_SCAN
       - git checkout $CODEBUILD_RESOLVED_SOURCE_VERSION
       - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
