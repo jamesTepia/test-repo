@@ -18,21 +18,20 @@ phases:
   install:
     on-failure: ABORT    
 
-  pre_build:
+  pre_build:    
     commands:
-      - echo "Running Trufflehog scanning for secrets ..."      
-      - git clone https://$GIT_TOKEN@github.com/$ORG/$REPO_TO_SCAN.git
-      - cd $REPO_TO_SCAN
-      - git checkout $COMMIT_ID
+      - echo "Running Trufflehog scanning for secrets ..."
       - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-      - docker run -v "$(pwd):/project" trufflesecurity/trufflehog:latest file:///project --no-verification --json > trufflehog.log
+      - git clone $GIT_TOKEN@github.com/$ORG/$REPO_TO_SCAN.git
+      - cd $REPO_TO_SCAN
+      - docker run -v "$(pwd):/project" trufflesecurity/trufflehog:latest git file:///project --since-commit $COMMIT_ID --json > trufflehog.log
       - echo "Trufflehog scanning complete"
       - echo "Identified Issues ..."
       - |
         while IFS= read -r line
         do
           echo "$line" | jq -r '.SourceMetadata.Data.Github.link'
-        done < "trufflehog.log"
+        done < "trufflehog.log"      
           
 artifacts:
   files:
