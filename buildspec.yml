@@ -2,12 +2,8 @@ version: 0.2
 
 env:
   variables:    
-    GIT_USER: "jamesTepia"
-    GIT_REPO: "test-repo"    
-    AWS_DEFAULT_REGION: "us-east-1"
     ORG: "Uon-Social"
-    REPO_TO_SCAN: "Backend"
-    COMMIT_ID: "241cb25122d2c07f67f0d9aca6ad9c791464b080"
+    REPO_TO_SCAN: "Backend"    
   secrets-manager:
     GIT_TOKEN: "arn:aws:secretsmanager:us-east-1:636184159442:secret:james-test-WYYiCZ:GIT_TOKEN"
     DOCKER_USERNAME: "arn:aws:secretsmanager:us-east-1:636184159442:secret:james-test-WYYiCZ:DOCKER_USERNAME"
@@ -16,22 +12,21 @@ env:
 
 phases:
   install:
-    on-failure: ABORT    
+    on-failure: ABORT
 
   pre_build:    
     commands:
       - echo "Running Trufflehog scanning for secrets ..."
       - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       - git clone https://$GIT_TOKEN@github.com/$ORG/$REPO_TO_SCAN.git
-      - cd $REPO_TO_SCAN
-      - docker run -v "$(pwd):/project" trufflesecurity/trufflehog:latest git file:///project --since-commit $COMMIT_ID --json > trufflehog.log
+      - docker run -v $PWD:/projects trufflesecurity/trufflehog:latest git file:///projects --only-verified --max-depth=1 --json > trufflehog.log
       - echo "Trufflehog scanning complete"
       - echo "Identified Issues ..."
       - |
         while IFS= read -r line
         do
-          echo "$line" | jq -r '.SourceMetadata.Data.Github.link'
-        done < "trufflehog.log"      
+          echo "$line" | jq -r '.SourceMetadata.Data.Git'
+        done < "trufflehog.log"
           
 artifacts:
   files:
