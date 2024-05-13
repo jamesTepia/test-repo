@@ -19,9 +19,9 @@ jobs:
             distribution: 'oracle'
             java-version: '17'
       
-      - run: javac /home/runner/work/test-repo/test-repo/com.example.main.java
+      - run: javac main.java
 
-      - run: java /home/runner/work/test-repo/test-repo/com.example.main
+      - run: java main
             
       - uses: sonarsource/sonarqube-scan-action@master
         env:
