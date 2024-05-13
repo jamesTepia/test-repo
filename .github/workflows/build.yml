@@ -19,6 +19,8 @@ jobs:
             distribution: 'oracle'
             java-version: '17'
       
+      - run: javac com.example.main.java
+
       - run: java com.example.main
             
       - uses: sonarsource/sonarqube-scan-action@master
