@@ -19,12 +19,9 @@ jobs:
             distribution: 'oracle'
             java-version: '17'
       
-      - run: |
-          pwd
-          ls -la
-          javac main.java
-
-      - run: java main
+      - run: |          
+          javac com/example/main.java
+          java com/example/main
             
       - uses: sonarsource/sonarqube-scan-action@master
         env:
