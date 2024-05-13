@@ -20,6 +20,7 @@ jobs:
             java-version: '17'
       
       - run: |          
+          ls com/example/main.java
           javac com/example/main.java
           java com/example/main
             
