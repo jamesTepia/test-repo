@@ -20,11 +20,7 @@ jobs:
             java-version: '17'
       
       - run: javac com/example/main.java
-
-      - run: ls com/example
           
-      - run: java com/example/main
-            
       - uses: sonarsource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
