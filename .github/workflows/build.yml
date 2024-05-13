@@ -19,7 +19,10 @@ jobs:
             distribution: 'oracle'
             java-version: '17'
       
-      - run: javac main.java
+      - run: |
+          pwd
+          ls -la
+          javac main.java
 
       - run: java main
             
